@@ -21,7 +21,7 @@ from botorch.utils.multi_objective.pareto import is_non_dominated
 
 #################
 
-SMOKE_TEST = True
+SMOKE_TEST = False
 BATCH_SIZE = 4
 NUM_RESTARTS = 10 if not SMOKE_TEST else 1
 RAW_SAMPLES = 512 if not SMOKE_TEST else 1
