@@ -5,6 +5,16 @@ import pandas as pd
 import numpy as np
 
 
+def load_breastcancer_data(seed):
+    df = pd.read_parquet('../data/data_breastcancer.parquet', 'pyarrow')
+    y = df["Subtype"]
+    X = df.drop(columns=["Subtype"])
+    X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.2, random_state=seed
+            )
+
+    return X_train, X_test, y_train, y_test
+
 def load_adnimerge_data():
     adnimerge = pd.read_parquet('../data/reduced_baseline_adnimerge_df.parquet', 'pyarrow')
     adnimerge.dropna(inplace=True)

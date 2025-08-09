@@ -9,7 +9,7 @@ import json
 from utils import generate_initial_data, check_hv_early_stopping, save_plot_hv_progress, save_pareto_plot_2d, save_single_scatter_plot
 # from constants import *
 from init_models import initialize_model_MGP, initialize_model_SGP, initialize_model_MGP1
-from load_data import load_lowdim_data, load_lowdim_neuro_data,load_highdim_data
+from load_data import load_lowdim_data, load_lowdim_neuro_data,load_highdim_data, load_breastcancer_data
 from problems import RFOptimizationProblem
 from optim_functions import optimize_qehvi_and_get_observation, optimize_qnehvi_and_get_observation, optimize_qnparego_and_get_observation
 
@@ -37,7 +37,7 @@ verbose = True
 def main():
     parser = argparse.ArgumentParser(description="Run BO with different GP models and datasets.")
     parser.add_argument('--gp_model_type', type=str, required=True, choices=["SingleGP", "MultiGP", "MultiGPR1"], help='Type of GP model to use.')
-    parser.add_argument('--dataset', type=str, required=True, choices=["LD", "LD_NEURO", "HD"], help='Dataset to use.')
+    parser.add_argument('--dataset', type=str, required=True, choices=["LD", "LD_NEURO", "HD", "BREAST"], help='Dataset to use.')
     parser.add_argument('--acquisition', type=str, required=True,choices=["Sobol", "qParEGO", "qQEHVI", "qQNEHVI"], help='Acquisition function to be fit.')
     parser.add_argument('--seed', type=int, required=True, help='Seed for random number generation.')
 
@@ -57,7 +57,7 @@ def main():
             [10.0, 2.0, 2.0, 1.0],
             [300.0, 200.0, 15.0, 15.0]
         ])
-    elif dataset == "HD":
+    elif dataset == "HD" or dataset == "BREAST":
         bounds = torch.tensor([
             [10.0, 2.0, 2.0, 1.0],
             [300.0, 600.0, 15.0, 15.0]
@@ -77,9 +77,10 @@ def main():
         X_train, X_test, y_train, y_test = load_lowdim_data(seed)
     elif dataset == 'LD_NEURO':
         X_train, X_test, y_train, y_test = load_lowdim_neuro_data(seed)
-    else:
+    elif dataset == "HD":
         X_train, X_test, y_train, y_test = load_highdim_data(seed)
-
+    else:
+        X_train, X_test, y_train, y_test = load_breastcancer_data(seed)
 
     problem = RFOptimizationProblem(seed, bounds, X_train, X_test, y_train, y_test)
 
